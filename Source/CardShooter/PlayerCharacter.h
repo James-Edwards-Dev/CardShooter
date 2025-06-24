@@ -29,9 +29,15 @@ class CARDSHOOTER_API APlayerCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AimAction;
+
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Player_Input)
+	bool isAiming;
 
 protected:
 	// Called when the game starts or when spawned
@@ -41,6 +47,8 @@ protected:
 	void Move(const FInputActionValue& Value);
 	// Called for looking Input
 	void Look(const FInputActionValue& Value);
+	// Added for aiming and unaiming
+	void Aim(const FInputActionValue& Value);
 
 public:	
 	// Called every frame
