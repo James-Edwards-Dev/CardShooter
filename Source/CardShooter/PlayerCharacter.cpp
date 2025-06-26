@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -17,6 +18,32 @@ APlayerCharacter::APlayerCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(RootComponent);
 	Camera->bUsePawnControlRotation = true;
+}
+
+void APlayerCharacter::Server_SetMoveInput_Implementation(FVector2D Input)
+{
+	Multicast_SetMoveInput(Input);
+}
+
+void APlayerCharacter::Multicast_SetMoveInput_Implementation(FVector2D Input)
+{
+	if (!IsLocallyControlled())
+	{
+		MoveInput = Input;
+	}
+}
+
+void APlayerCharacter::Server_SetAiming_Implementation(bool bNewIsAiming)
+{
+	Multicast_SetAiming(bNewIsAiming);
+}
+
+void APlayerCharacter::Multicast_SetAiming_Implementation(bool bNewIsAiming)
+{
+	if (!IsLocallyControlled())
+	{
+		bIsAiming = bNewIsAiming;
+	}
 }
 
 void APlayerCharacter::NotifyControllerChanged()
@@ -44,6 +71,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APlayerCharacter::Move);
 		
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
@@ -71,12 +99,17 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
-	FVector2D MovementVector = Value.Get<FVector2D>();
+	MoveInput = Value.Get<FVector2D>();
+
+	if (IsLocallyControlled())
+	{
+		Server_SetMoveInput(MoveInput);
+	}
 
 	if (Controller != nullptr)
 	{
-		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
-		AddMovementInput(GetActorRightVector(), MovementVector.X);
+		AddMovementInput(GetActorForwardVector(), MoveInput.Y);
+		AddMovementInput(GetActorRightVector(), MoveInput.X);
 	}
 }
 
@@ -93,5 +126,10 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 void APlayerCharacter::Aim(const FInputActionValue& Value)
 {
-	isAiming = Value.Get<bool>();
+	bIsAiming = Value.Get<bool>();
+
+	if (IsLocallyControlled())
+	{
+		Server_SetAiming(bIsAiming);
+	}
 }
