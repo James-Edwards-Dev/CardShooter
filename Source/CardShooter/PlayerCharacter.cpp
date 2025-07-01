@@ -105,26 +105,29 @@ void APlayerCharacter::Tick(float DeltaTime)
 FHitResult APlayerCharacter::GetPlayerAimHitByChannel(float TraceDistance, ECollisionChannel Channel)
 {
 	FHitResult HitResult;
-	
-	FVector StartCast = Camera->GetComponentLocation();
-	FVector EndCast = StartCast + (GetControlRotation().Vector() * TraceDistance);
-	
+
+	// Set Start and End Location
+	FVector Start = Camera->GetComponentLocation();
+	FVector End = Start + (GetControlRotation().Vector() * TraceDistance);
+
+	// Set Parameters
 	FCollisionQueryParams Params;
-	Params.bTraceComplex = true;
+	// Params.bTraceComplex = true;
 	Params.AddIgnoredActor(this);
 
-	GetWorld()->LineTraceSingleByChannel(HitResult, StartCast, EndCast, Channel, Params);
+	// Line Trace
+	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, Channel, Params);
 
 	// Ray Tracing Debugging
 	if (HitResult.bBlockingHit)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Player Hit: " + HitResult.GetComponent()->GetName());
+		//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Player Hit: " + HitResult.GetComponent()->GetName());
 
-		DrawDebugLine(GetWorld(), StartCast, HitResult.Location, FColor::Orange, false, 2.0f);
+		DrawDebugLine(GetWorld(), Start, HitResult.Location, FColor::Orange, false, 2.0f);
 	}
 	else
 	{
-		DrawDebugLine(GetWorld(), StartCast, EndCast, FColor::Orange, false, 2.0f);
+		DrawDebugLine(GetWorld(), Start, End, FColor::Orange, false, 2.0f);
 	}
 
 	return HitResult;
@@ -171,7 +174,13 @@ void APlayerCharacter::Start_PrimaryFire()
 {
 	bIsPrimaryFiring = true;
 
-	FHitResult PlayerHit = GetPlayerAimHitByChannel();
+	// Line trace to check what player has fired at
+	FHitResult FireResults = GetPlayerAimHitByChannel();
+	// Check if fire results is a player
+	if (FireResults.GetActor() != nullptr && FireResults.GetActor()->IsA(APlayerCharacter::StaticClass()))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Red, "Player Class Hit");
+	}
 }
 
 void APlayerCharacter::While_PrimaryFire()
