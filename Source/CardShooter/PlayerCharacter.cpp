@@ -102,6 +102,33 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 }
 
+FHitResult APlayerCharacter::GetPlayerAimHitByChannel(float TraceDistance, ECollisionChannel Channel)
+{
+	FHitResult HitResult;
+	
+	FVector StartCast = Camera->GetComponentLocation();
+	FVector EndCast = StartCast + (GetControlRotation().Vector() * TraceDistance);
+	
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	GetWorld()->LineTraceSingleByChannel(HitResult, StartCast, EndCast, Channel, Params);
+
+	// Ray Tracing Debugging
+	/*if (HitResult.bBlockingHit)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Player Hit: " + HitResult.GetActor()->GetName());
+
+		DrawDebugLine(GetWorld(), StartCast, HitResult.Location, FColor::Orange, false, 2.0f);
+	}
+	else
+	{
+		DrawDebugLine(GetWorld(), StartCast, EndCast, FColor::Orange, false, 2.0f);
+	}*/
+
+	return HitResult;
+}
+
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
 	MoveInput = Value.Get<FVector2D>();
@@ -143,17 +170,17 @@ void APlayerCharacter::Start_PrimaryFire()
 {
 	bIsPrimaryFiring = true;
 
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Started Firing");
+	FHitResult PlayerHit = GetPlayerAimHitByChannel();
 }
 
 void APlayerCharacter::While_PrimaryFire()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Red, "Firing Currently");
+	// GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Red, "Firing Currently");
 }
 
 void APlayerCharacter::Stop_PrimaryFire()
 {
 	bIsPrimaryFiring = false;
 
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Stopped Firing");
+	// GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Stopped Firing");
 }
