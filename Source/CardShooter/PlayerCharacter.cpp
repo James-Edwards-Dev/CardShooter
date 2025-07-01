@@ -110,21 +110,22 @@ FHitResult APlayerCharacter::GetPlayerAimHitByChannel(float TraceDistance, EColl
 	FVector EndCast = StartCast + (GetControlRotation().Vector() * TraceDistance);
 	
 	FCollisionQueryParams Params;
+	Params.bTraceComplex = true;
 	Params.AddIgnoredActor(this);
 
 	GetWorld()->LineTraceSingleByChannel(HitResult, StartCast, EndCast, Channel, Params);
 
 	// Ray Tracing Debugging
-	/*if (HitResult.bBlockingHit)
+	if (HitResult.bBlockingHit)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Player Hit: " + HitResult.GetActor()->GetName());
+		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Player Hit: " + HitResult.GetComponent()->GetName());
 
 		DrawDebugLine(GetWorld(), StartCast, HitResult.Location, FColor::Orange, false, 2.0f);
 	}
 	else
 	{
 		DrawDebugLine(GetWorld(), StartCast, EndCast, FColor::Orange, false, 2.0f);
-	}*/
+	}
 
 	return HitResult;
 }

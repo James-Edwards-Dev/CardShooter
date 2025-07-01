@@ -78,7 +78,7 @@ public:
 private:
 
 	// Aiming Line Trace
-	FHitResult GetPlayerAimHitByChannel(float TraceDistance = 100000.0f, ECollisionChannel Channel = ECC_WorldDynamic);
+	FHitResult GetPlayerAimHitByChannel(float TraceDistance = 100000.0f, ECollisionChannel Channel = ECC_GameTraceChannel1);
 	
 public:
 	// Called for Movement Input
