@@ -17,6 +17,7 @@ class CARDSHOOTER_API APlayerCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* Camera;
 
+	// Enhanced Input 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 
@@ -31,6 +32,9 @@ class CARDSHOOTER_API APlayerCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AimAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PrimaryFireAction;
 
 public:
 	// Sets default values for this character's properties
@@ -64,6 +68,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = Player_Input)
 	bool bIsAiming;
 
+	UPROPERTY(BlueprintReadOnly, Category = Player_Input)
+	bool bIsPrimaryFiring;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -74,5 +81,8 @@ public:
 	void Look(const FInputActionValue& Value);
 	// Added for aiming and unaiming
 	void Aim(const FInputActionValue& Value);
-	
+	// Added for Shotting/Alternative Primary Fire Actions
+	void Start_PrimaryFire();
+	void While_PrimaryFire();
+	void Stop_PrimaryFire();
 };
