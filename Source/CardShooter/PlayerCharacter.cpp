@@ -18,6 +18,13 @@ APlayerCharacter::APlayerCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(RootComponent);
 	Camera->bUsePawnControlRotation = true;
+
+	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>("First Person Mesh");
+	FirstPersonMesh->SetupAttachment(RootComponent);
+
+	// Hides the 3rd person mesh for the owner and shows the 1st person mesh only to the owner
+	FirstPersonMesh->bOnlyOwnerSee = true;
+	GetMesh()->bOwnerNoSee = true;
 }
 
 void APlayerCharacter::Server_SetMoveInput_Implementation(FVector2D Input)
