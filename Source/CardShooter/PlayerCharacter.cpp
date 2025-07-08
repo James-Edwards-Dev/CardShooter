@@ -186,7 +186,7 @@ void APlayerCharacter::Start_PrimaryFire()
 	// Check if fire results is a player
 	if (FireResults.GetActor() != nullptr && FireResults.GetActor()->IsA(APlayerCharacter::StaticClass()))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Red, "Player Class Hit");
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "Player Class Hit");
 	}
 }
 
