@@ -16,11 +16,12 @@ APlayerCharacter::APlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
-	Camera->SetupAttachment(RootComponent);
+	Camera->SetupAttachment(GetCapsuleComponent());
 	Camera->bUsePawnControlRotation = true;
 
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>("First Person Mesh");
-	FirstPersonMesh->SetupAttachment(RootComponent);
+	FirstPersonMesh->SetupAttachment(Camera);
+	FirstPersonMesh->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	// Hides the 3rd person mesh for the owner and shows the 1st person mesh only to the owner
 	FirstPersonMesh->bOnlyOwnerSee = true;
