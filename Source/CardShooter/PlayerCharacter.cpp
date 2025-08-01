@@ -54,6 +54,13 @@ void APlayerCharacter::Multicast_SetAiming_Implementation(bool bNewIsAiming)
 	}
 }
 
+void APlayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(APlayerCharacter, CurrentWeapon);
+}
+
 void APlayerCharacter::NotifyControllerChanged()
 {
 	Super::NotifyControllerChanged();
@@ -203,6 +210,24 @@ void APlayerCharacter::Stop_PrimaryFire()
 	// GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Stopped Firing");
 }
 
+void APlayerCharacter::AttachWeaponToPlayer(AWeapon* NewWeapon)
+{
+	NewWeapon->SetActorEnableCollision(false);
+
+	if (IsLocallyControlled()) {
+		NewWeapon->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Hand_RSocket");
+	}
+	else {
+		NewWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Hand_RSocket");
+	}
+	
+}
+
+void APlayerCharacter::OnRep_CurrentWeapon()
+{
+	AttachWeaponToPlayer(CurrentWeapon);
+}
+
 void APlayerCharacter::EquipWeapon_Implementation(TSubclassOf<AWeapon> Weapon)
 {
 	if (CurrentWeapon)
@@ -220,9 +245,7 @@ void APlayerCharacter::EquipWeapon_Implementation(TSubclassOf<AWeapon> Weapon)
 	
 	if (AWeapon* NewWeapon = GetWorld()->SpawnActor<AWeapon>(Weapon, SpawnLocation, SpawnRotation, SpawnParams))
 	{
-		NewWeapon->SetActorEnableCollision(false);
-		NewWeapon->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Hand_RSocket");
-
+		AttachWeaponToPlayer(NewWeapon);
 		CurrentWeapon = NewWeapon;
 	}
 }

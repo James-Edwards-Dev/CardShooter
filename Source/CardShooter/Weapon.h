@@ -11,6 +11,7 @@ class CARDSHOOTER_API AWeapon : public AActor
 {
 	GENERATED_BODY()
 
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BaseMesh;
 	

@@ -48,7 +48,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
 	TSubclassOf<AWeapon> WeaponClass;
 
-	 UPROPERTY()
+	 UPROPERTY(ReplicatedUsing = OnRep_CurrentWeapon)
 	AWeapon* CurrentWeapon;
 	
 	// Server + Multicast RPCs
@@ -63,6 +63,9 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_SetAiming(bool bNewIsAiming);
+
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void NotifyControllerChanged() override;
 	// Called to bind functionality to input
@@ -105,6 +108,11 @@ public:
 
 protected:
 
+	void AttachWeaponToPlayer(AWeapon* Weapon);
+	
 	UFUNCTION(Server, Reliable)
 	void EquipWeapon(TSubclassOf<AWeapon> Weapon);
+
+	UFUNCTION()
+	void OnRep_CurrentWeapon();
 };
