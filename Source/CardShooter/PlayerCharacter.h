@@ -100,7 +100,6 @@ public:
 	void Aim(const FInputActionValue& Value);
 	// Added for Shotting/Alternative Primary Fire Actions
 	void Start_PrimaryFire();
-	void While_PrimaryFire();
 	void Stop_PrimaryFire();
 
 protected:

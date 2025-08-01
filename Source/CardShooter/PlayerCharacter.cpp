@@ -97,8 +97,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		// Shooting/Firing
 		EnhancedInputComponent->BindAction(PrimaryFireAction, ETriggerEvent::Started, this, &APlayerCharacter::Start_PrimaryFire);
-		// EnhancedInputComponent->BindAction(PrimaryFireAction, ETriggerEvent::Triggered, this, &APlayerCharacter::While_PrimaryFire);
-		// EnhancedInputComponent->BindAction(PrimaryFireAction, ETriggerEvent::Completed, this, &APlayerCharacter::Stop_PrimaryFire);
+		EnhancedInputComponent->BindAction(PrimaryFireAction, ETriggerEvent::Completed, this, &APlayerCharacter::Stop_PrimaryFire);
 	}
 }
 
@@ -198,17 +197,10 @@ void APlayerCharacter::Start_PrimaryFire()
 	// }
 }
 
-// void APlayerCharacter::While_PrimaryFire()
-// {
-// 	// GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Red, "Firing Currently");
-// }
-//
-// void APlayerCharacter::Stop_PrimaryFire()
-// {
-// 	bIsPrimaryFiring = false;
-//
-// 	// GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Stopped Firing");
-// }
+void APlayerCharacter::Stop_PrimaryFire()
+{
+	CurrentWeapon->EndPrimaryFire();
+}
 
 void APlayerCharacter::AttachWeaponToPlayer(AWeapon* NewWeapon)
 {

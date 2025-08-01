@@ -33,22 +33,25 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::PrimaryFire()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Bang");
+	// Start Fire Cooldown
+	GetWorld()->GetTimerManager().SetTimer(
+		PrimaryFireCooldownHandle,
+		this,
+		&AWeapon::PrimaryFireCoolDownElapsed,
+		FireCoolDown,
+		false);
+	
+	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, "Bang");
 }
 
 void AWeapon::StartPrimaryFire_Implementation()
 {
+	bPrimaryFireHeld = true;
 	// Check if fire is on cooldown
 	const FTimerManager& TimerManager = GetWorld()->GetTimerManager();
 	if (!TimerManager.TimerExists(PrimaryFireCooldownHandle) || !TimerManager.IsTimerActive(PrimaryFireCooldownHandle))
 	{
 		PrimaryFire();
-
-		if (FiringType == EFiringType::FullAuto)
-		{
-			
-		}	
-
 	}
 }
 
@@ -57,5 +60,10 @@ void AWeapon::EndPrimaryFire_Implementation()
 	bPrimaryFireHeld = false;
 }
 
-
-
+void AWeapon::PrimaryFireCoolDownElapsed()
+{
+	if (bPrimaryFireHeld && FiringType == EFiringType::FullAuto)
+	{
+		PrimaryFire();
+	}
+}

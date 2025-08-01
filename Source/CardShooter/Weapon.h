@@ -9,8 +9,8 @@
 UENUM(BlueprintType)
 enum class EFiringType : uint8
 {
-	SemiAuto UMETA(DisplayName = "Semi Auto"),
-	FullAuto UMETA(DisplayName = "Full Auto")
+	FullAuto UMETA(DisplayName = "Full Auto"),
+	SemiAuto UMETA(DisplayName = "Semi Auto")
 };
 
 UCLASS()
@@ -29,7 +29,10 @@ protected:
 
 	// Weapon Stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	EFiringType FiringType;
+	float FireCoolDown = 1.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	EFiringType FiringType = EFiringType::FullAuto;
 
 private:
 	FTimerHandle PrimaryFireCooldownHandle;
@@ -55,4 +58,6 @@ public:
 
 private:
 	void PrimaryFire();
+
+	void PrimaryFireCoolDownElapsed();
 };
