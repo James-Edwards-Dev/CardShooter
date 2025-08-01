@@ -212,13 +212,16 @@ void APlayerCharacter::Stop_PrimaryFire()
 
 void APlayerCharacter::AttachWeaponToPlayer(AWeapon* NewWeapon)
 {
-	NewWeapon->SetActorEnableCollision(false);
+	if (NewWeapon && GetMesh())
+	{
+		NewWeapon->SetActorEnableCollision(false);
 
-	if (IsLocallyControlled()) {
-		NewWeapon->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Hand_RSocket");
-	}
-	else {
-		NewWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Hand_RSocket");
+		if (IsLocallyControlled()) {
+			NewWeapon->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Hand_RSocket");
+		}
+		else {
+			NewWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Hand_RSocket");
+		}
 	}
 	
 }
