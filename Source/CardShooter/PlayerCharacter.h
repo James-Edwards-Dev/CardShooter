@@ -7,6 +7,7 @@
 #include "InputAction.h"
 #include "InputActionValue.h"
 #include "InputMappingContext.h"
+#include "Weapon.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -42,6 +43,13 @@ class CARDSHOOTER_API APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+
+	// Weapon
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+	TSubclassOf<AWeapon> WeaponClass;
+
+	 UPROPERTY()
+	AWeapon* CurrentWeapon;
 	
 	// Server + Multicast RPCs
 	UFUNCTION(Server, Reliable)
@@ -94,4 +102,9 @@ public:
 	void Start_PrimaryFire();
 	void While_PrimaryFire();
 	void Stop_PrimaryFire();
+
+protected:
+
+	UFUNCTION(Server, Reliable)
+	void EquipWeapon(TSubclassOf<AWeapon> Weapon);
 };

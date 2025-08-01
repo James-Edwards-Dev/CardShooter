@@ -100,7 +100,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	EquipWeapon(WeaponClass);
 }
 
 // Called every frame
@@ -201,4 +201,28 @@ void APlayerCharacter::Stop_PrimaryFire()
 	bIsPrimaryFiring = false;
 
 	// GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, "Stopped Firing");
+}
+
+void APlayerCharacter::EquipWeapon_Implementation(TSubclassOf<AWeapon> Weapon)
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Destroy();
+		CurrentWeapon = nullptr;
+	}
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = GetInstigator();
+
+	FVector SpawnLocation = GetActorLocation() + FVector(0, 0, 500);
+	FRotator SpawnRotation = FRotator(0,0,0);
+	
+	if (AWeapon* NewWeapon = GetWorld()->SpawnActor<AWeapon>(Weapon, SpawnLocation, SpawnRotation, SpawnParams))
+	{
+		NewWeapon->SetActorEnableCollision(false);
+		NewWeapon->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "Hand_RSocket");
+
+		CurrentWeapon = NewWeapon;
+	}
 }
