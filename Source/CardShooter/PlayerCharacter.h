@@ -82,9 +82,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = Player_Input)
 	bool bIsAiming;
 
-	UPROPERTY(BlueprintReadOnly, Category = Player_Input)
-	bool bIsPrimaryFiring;
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
