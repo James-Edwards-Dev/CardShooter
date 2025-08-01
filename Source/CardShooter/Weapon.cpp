@@ -40,8 +40,9 @@ void AWeapon::PrimaryFire()
 		&AWeapon::PrimaryFireCoolDownElapsed,
 		FireCoolDown,
 		false);
-	
-	GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Red, "Bang");
+
+	// RayCast
+	FHitResult HitResult = GetOwner<APlayerCharacter>()->GetAimHitResult(true);
 }
 
 void AWeapon::StartPrimaryFire_Implementation()

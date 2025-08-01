@@ -85,13 +85,10 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-private:
-
-	// Aiming Line Trace
-	FHitResult GetPlayerAimHitByChannel(float TraceDistance = 100000.0f, ECollisionChannel Channel = ECC_GameTraceChannel1);
 	
-public:
+	// Aiming Line Trace
+	FHitResult GetAimHitResult(bool debug = false, float TraceDistance = 100000.0f, ECollisionChannel Channel = ECC_GameTraceChannel1);
+	
 	// Called for Movement Input
 	void Move(const FInputActionValue& Value);
 	// Called for looking Input
