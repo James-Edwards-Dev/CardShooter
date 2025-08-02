@@ -3,8 +3,8 @@
 
 #include "Weapon.h"
 
-#include "MeshPaintVisualize.h"
 #include "PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -41,8 +41,16 @@ void AWeapon::PrimaryFire()
 		FireCoolDown,
 		false);
 
+	APlayerCharacter* PlayerCharacter = GetOwner<APlayerCharacter>();
 	// RayCast
-	FHitResult HitResult = GetOwner<APlayerCharacter>()->GetAimHitResult(true);
+	FHitResult HitResult = PlayerCharacter->GetAimHitResult(true);
+	
+	UGameplayStatics::ApplyDamage(
+		HitResult.GetActor(),
+		10,
+		PlayerCharacter->GetController(),
+		PlayerCharacter,
+		UDamageType::StaticClass());
 }
 
 void AWeapon::StartPrimaryFire_Implementation()
