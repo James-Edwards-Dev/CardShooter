@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "VectorUtil.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values
@@ -26,6 +27,8 @@ APlayerCharacter::APlayerCharacter()
 	// Hides the 3rd person mesh for the owner and shows the 1st person mesh only to the owner
 	FirstPersonMesh->bOnlyOwnerSee = true;
 	GetMesh()->bOwnerNoSee = true;
+
+	Health = MaxHealth;
 }
 
 void APlayerCharacter::Server_SetMoveInput_Implementation(FVector2D Input)
@@ -99,6 +102,18 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(PrimaryFireAction, ETriggerEvent::Started, this, &APlayerCharacter::Start_PrimaryFire);
 		EnhancedInputComponent->BindAction(PrimaryFireAction, ETriggerEvent::Completed, this, &APlayerCharacter::Stop_PrimaryFire);
 	}
+}
+
+float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	float NewHealth = FMath::Clamp((Health - DamageAmount), 0, 100);
+	float ActualDamage = Health - NewHealth;
+
+	Health = NewHealth;
+	
+	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, FString::Printf(TEXT("Health %f"), Health));
+	
+	return ActualDamage;
 }
 
 
