@@ -5,6 +5,7 @@
 
 #include "PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -15,6 +16,9 @@ AWeapon::AWeapon()
 
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("Base Mesh");
 	BaseMesh->SetupAttachment(RootComponent);
+
+	Muzzle = CreateDefaultSubobject<UArrowComponent>("Muzzle");
+	Muzzle->SetupAttachment(BaseMesh);
 }
 
 // Called when the game starts or when spawned
@@ -51,6 +55,22 @@ void AWeapon::PrimaryFire()
 		PlayerCharacter->GetController(),
 		PlayerCharacter,
 		UDamageType::StaticClass());
+
+	DisplayPrimaryFireEffects();
+}
+
+void AWeapon::DisplayPrimaryFireEffects_Implementation()
+{
+	// Spawn Muzzle Flash
+	UParticleSystemComponent* MuzzleFlashComponent = UGameplayStatics::SpawnEmitterAttached(
+		MuzzleFlash,
+		Muzzle,
+		NAME_None,
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		EAttachLocation::SnapToTarget);
+	
+	MuzzleFlashComponent->SetWorldScale3D(Muzzle->GetComponentScale());
 }
 
 void AWeapon::StartPrimaryFire_Implementation()

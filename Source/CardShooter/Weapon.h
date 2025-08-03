@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
@@ -21,6 +22,9 @@ class CARDSHOOTER_API AWeapon : public AActor
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* BaseMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UArrowComponent* Muzzle;
 	
 	// Sets default values for this actor's properties
 	AWeapon();
@@ -33,6 +37,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	EFiringType FiringType = EFiringType::FullAuto;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
+	UParticleSystem* MuzzleFlash;
 
 private:
 	FTimerHandle PrimaryFireCooldownHandle;
@@ -55,6 +62,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void EndPrimaryFire();
+	
+	UFUNCTION(NetMulticast, Reliable)
+	void DisplayPrimaryFireEffects();
 
 private:
 	void PrimaryFire();
