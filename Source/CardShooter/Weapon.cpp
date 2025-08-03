@@ -56,10 +56,10 @@ void AWeapon::PrimaryFire()
 		PlayerCharacter,
 		UDamageType::StaticClass());
 
-	DisplayPrimaryFireEffects();
+	DisplayPrimaryFireEffects(HitResult);
 }
 
-void AWeapon::DisplayPrimaryFireEffects_Implementation()
+void AWeapon::DisplayPrimaryFireEffects_Implementation(FHitResult HitResult)
 {
 	// Spawn Muzzle Flash
 	UParticleSystemComponent* MuzzleFlashComponent = UGameplayStatics::SpawnEmitterAttached(
@@ -71,6 +71,12 @@ void AWeapon::DisplayPrimaryFireEffects_Implementation()
 		EAttachLocation::SnapToTarget);
 	
 	MuzzleFlashComponent->SetWorldScale3D(Muzzle->GetComponentScale());
+
+	// Spawn Impact Effect
+	if (HitResult.bBlockingHit)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, HitResult.Location);
+	}
 }
 
 void AWeapon::StartPrimaryFire_Implementation()

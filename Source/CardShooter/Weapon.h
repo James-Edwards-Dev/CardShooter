@@ -40,6 +40,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
 	UParticleSystem* MuzzleFlash;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
+	UParticleSystem* ImpactEffect;
 
 private:
 	FTimerHandle PrimaryFireCooldownHandle;
@@ -64,7 +66,7 @@ public:
 	void EndPrimaryFire();
 	
 	UFUNCTION(NetMulticast, Reliable)
-	void DisplayPrimaryFireEffects();
+	void DisplayPrimaryFireEffects(FHitResult HitResult);
 
 private:
 	void PrimaryFire();
