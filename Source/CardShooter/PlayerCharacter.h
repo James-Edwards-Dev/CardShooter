@@ -8,6 +8,7 @@
 #include "InputActionValue.h"
 #include "InputMappingContext.h"
 #include "Weapon.h"
+#include "Blueprint/UserWidget.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -39,6 +40,9 @@ class CARDSHOOTER_API APlayerCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryFireAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UUserWidget> HUD_Widget_Class;
 
 public:
 	// Sets default values for this character's properties

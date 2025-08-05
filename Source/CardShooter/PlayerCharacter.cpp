@@ -121,7 +121,13 @@ float APlayerCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	EquipWeapon(WeaponClass);
+	
+	// Create HUD Widget
+	if (UUserWidget* HUD_Widget = CreateWidget(GetGameInstance(), HUD_Widget_Class)) {
+		HUD_Widget->AddToViewport();
+	}
 }
 
 // Called every frame
