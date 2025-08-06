@@ -3,6 +3,7 @@
 
 #include "CoreGameMode.h"
 #include "CorePlayerState.h"
+#include "GameFramework/GameStateBase.h"
 
 void ACoreGameMode::PostLogin(APlayerController* NewPlayer)
 {
@@ -22,6 +23,29 @@ void ACoreGameMode::AssignTeamToPlayer(ACorePlayerState* PlayerState)
 	}
 	else
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, "New Count");
+		// Count Players Per Team
+		TArray<int32> TeamCounts;
+		TeamCounts.Init(0, TeamCount);
+		for (APlayerState* PlayerStates : GameState->PlayerArray)
+		{
+			if (ACorePlayerState* CorePlayerStates = Cast<ACorePlayerState>(PlayerStates))
+			{
+				uint8 TeamIndex = static_cast<uint8>(CorePlayerStates->GetTeam());
+				if (TeamIndex > 0)
+				{
+					TeamCounts[TeamIndex - 1] += 1;
+				}
+			}
+		}
+
+		for (int32 i = 0; i < TeamCounts.Num(); ++i)
+		{
+			FString TeamName = UEnum::GetValueAsString(static_cast<ETeam>(i + 1));
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Team %s has %d players"), *TeamName, TeamCounts[i]));
+		}
+		
 		uint8 TeamIndex = FMath::RandRange(1, TeamCount);
 		ETeam NewTeam = static_cast<ETeam>(TeamIndex);
 

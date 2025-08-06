@@ -17,6 +17,7 @@ class CARDSHOOTER_API ACorePlayerState : public APlayerState
 
 public:
 	void SetTeam(ETeam NewTeam);
+	ETeam GetTeam() const;
 
 protected:
 	ETeam Team;
