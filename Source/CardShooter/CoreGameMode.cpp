@@ -39,12 +39,20 @@ void ACoreGameMode::AssignTeamToPlayer(ACorePlayerState* PlayerState)
 			}
 		}
 
+		// Get Min Team Size
+		int32 MinTeamSize = MAX_int32;
 		for (int32 i = 0; i < TeamCounts.Num(); ++i)
 		{
 			FString TeamName = UEnum::GetValueAsString(static_cast<ETeam>(i + 1));
 
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Team %s has %d players"), *TeamName, TeamCounts[i]));
+
+			if (MinTeamSize > i)
+			{
+				MinTeamSize = i;
+			}
 		}
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Min Team Size is %d players"), MinTeamSize));
 		
 		uint8 TeamIndex = FMath::RandRange(1, TeamCount);
 		ETeam NewTeam = static_cast<ETeam>(TeamIndex);
