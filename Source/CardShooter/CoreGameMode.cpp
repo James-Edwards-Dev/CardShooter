@@ -47,9 +47,9 @@ void ACoreGameMode::AssignTeamToPlayer(ACorePlayerState* PlayerState)
 
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Team %s has %d players"), *TeamName, TeamCounts[i]));
 
-			if (MinTeamSize > i)
+			if (MinTeamSize > TeamCounts[i])
 			{
-				MinTeamSize = i;
+				MinTeamSize = TeamCounts[i];
 			}
 		}
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Min Team Size is %d players"), MinTeamSize));
