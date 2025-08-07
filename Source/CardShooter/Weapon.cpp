@@ -77,6 +77,13 @@ void AWeapon::DisplayPrimaryFireEffects_Implementation(FHitResult HitResult)
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, HitResult.Location);
 	}
+
+	// Play Fire Audio
+	UGameplayStatics::PlaySoundAtLocation(
+		GetWorld(),
+		PrimaryFireSound,
+		MuzzleFlashComponent->GetComponentLocation(),
+		FRotator(0, 0, 0));
 }
 
 void AWeapon::StartPrimaryFire_Implementation()

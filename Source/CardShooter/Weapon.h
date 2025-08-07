@@ -43,6 +43,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visuals")
 	UParticleSystem* ImpactEffect;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* PrimaryFireSound;
+
 private:
 	FTimerHandle PrimaryFireCooldownHandle;
 
