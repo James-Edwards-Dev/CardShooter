@@ -23,4 +23,5 @@ public:
 
 protected:
 	virtual void AssignTeamToPlayer(ACorePlayerState* PlayerState);
+	TArray<ETeam> GetSmallestTeams() const;
 };
