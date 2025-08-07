@@ -17,7 +17,7 @@ void ACoreGameMode::PostLogin(APlayerController* NewPlayer)
 
 void ACoreGameMode::AssignTeamToPlayer(ACorePlayerState* PlayerState)
 {
-	if (TeamCount <= 1)
+	if (NumberOfTeams <= 1)
 	{
 		PlayerState->SetTeam(ETeam::Neutral);
 	}
@@ -33,8 +33,8 @@ void ACoreGameMode::AssignTeamToPlayer(ACorePlayerState* PlayerState)
 TArray<ETeam> ACoreGameMode::GetSmallestTeams() const
 {
 	// Count Players Per Team
-	TArray<int32> TeamCounts;
-	TeamCounts.Init(0, TeamCount);
+	TArray<int32> PlayersPerTeam;
+	PlayersPerTeam.Init(0, NumberOfTeams);
 	for (APlayerState* PlayerStates : GameState->PlayerArray)
 	{
 		if (ACorePlayerState* CorePlayerStates = Cast<ACorePlayerState>(PlayerStates))
@@ -42,26 +42,26 @@ TArray<ETeam> ACoreGameMode::GetSmallestTeams() const
 			uint8 TeamIndex = static_cast<uint8>(CorePlayerStates->GetTeam());
 			if (TeamIndex > 0)
 			{
-				TeamCounts[TeamIndex - 1] += 1;
+				PlayersPerTeam[TeamIndex - 1] += 1;
 			}
 		}
 	}
 
 	// Get Min Team Size
 	int32 MinTeamSize = MAX_int32;
-	for (int32 i = 0; i < TeamCounts.Num(); ++i)
+	for (int32 i = 0; i < PlayersPerTeam.Num(); ++i)
 	{
-		if (MinTeamSize > TeamCounts[i])
+		if (MinTeamSize > PlayersPerTeam[i])
 		{
-			MinTeamSize = TeamCounts[i];
+			MinTeamSize = PlayersPerTeam[i];
 		}
 	}
 
 	// Get Teams with Min Size
 	TArray<ETeam> SmallestTeams;
-	for (int32 i = 0; i < TeamCounts.Num(); ++i)
+	for (int32 i = 0; i < PlayersPerTeam.Num(); ++i)
 	{
-		if (TeamCounts[i] == MinTeamSize)
+		if (PlayersPerTeam[i] == MinTeamSize)
 		{
 			SmallestTeams.Add(static_cast<ETeam>(i + 1));
 		}

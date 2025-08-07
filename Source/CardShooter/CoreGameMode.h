@@ -16,7 +16,7 @@ class CARDSHOOTER_API ACoreGameMode : public AGameMode
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = GameSettings, meta = (ClampMin = "1", ClampMax = "4", AllowPrivateAccess = "true"))
-	uint8 TeamCount = 2;
+	uint8 NumberOfTeams = 2;
 	
 public:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
