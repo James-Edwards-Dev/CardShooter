@@ -23,7 +23,6 @@ void ACoreGameMode::AssignTeamToPlayer(ACorePlayerState* PlayerState)
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, "New Count");
 		// Count Players Per Team
 		TArray<int32> TeamCounts;
 		TeamCounts.Init(0, TeamCount);
@@ -43,16 +42,11 @@ void ACoreGameMode::AssignTeamToPlayer(ACorePlayerState* PlayerState)
 		int32 MinTeamSize = MAX_int32;
 		for (int32 i = 0; i < TeamCounts.Num(); ++i)
 		{
-			FString TeamName = UEnum::GetValueAsString(static_cast<ETeam>(i + 1));
-
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Team %s has %d players"), *TeamName, TeamCounts[i]));
-
 			if (MinTeamSize > TeamCounts[i])
 			{
 				MinTeamSize = TeamCounts[i];
 			}
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Min Team Size is %d players"), MinTeamSize));
 
 		// Get Teams with Min Size
 		TArray<ETeam> SelectableTeams;
@@ -61,9 +55,6 @@ void ACoreGameMode::AssignTeamToPlayer(ACorePlayerState* PlayerState)
 			if (TeamCounts[i] == MinTeamSize)
 			{
 				SelectableTeams.Add(static_cast<ETeam>(i + 1));
-				
-				FString TeamName = UEnum::GetValueAsString(static_cast<ETeam>(i + 1));
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Team %s can be selected "), *TeamName));
 			}
 		}
 		
