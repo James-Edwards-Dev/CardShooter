@@ -237,6 +237,7 @@ void APlayerCharacter::AttachWeaponToPlayer(AWeapon* NewWeapon)
 void APlayerCharacter::UpdatePlayerColor()
 {
 	if (!IsValid(this)) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("UpdatePlayerColor returned early: 'PlayerChracter' is not valid."));
 		return;
 	}
 	
@@ -249,6 +250,7 @@ void APlayerCharacter::UpdatePlayerColor()
 
 	ACorePlayerState* PS = GetPlayerState<ACorePlayerState>();
 	if (!PS) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("UpdatePlayerColor returned early: PlayerState is null."));
 		return;
 	}
 	
