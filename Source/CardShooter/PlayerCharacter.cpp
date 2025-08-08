@@ -3,11 +3,11 @@
 
 #include "PlayerCharacter.h"
 
+#include "CorePlayerState.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "VectorUtil.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values
@@ -232,6 +232,35 @@ void APlayerCharacter::AttachWeaponToPlayer(AWeapon* NewWeapon)
 		}
 	}
 	
+}
+
+void APlayerCharacter::UpdatePlayerColor()
+{
+	if (!IsValid(this)) {
+		return;
+	}
+	
+	UMaterialInterface* PlayerColorMaterial = GetMesh()->GetMaterial(0);
+	
+	DynamicColorMaterial = UMaterialInstanceDynamic::Create(PlayerColorMaterial, nullptr);
+
+	GetMesh()->SetMaterial(0, DynamicColorMaterial);
+	FirstPersonMesh->SetMaterial(0, DynamicColorMaterial);
+
+	ACorePlayerState* PS = GetPlayerState<ACorePlayerState>();
+	if (!PS) {
+		return;
+	}
+	
+	switch (PS->GetTeam()) {
+	case ETeam::Red:
+		DynamicColorMaterial->SetVectorParameterValueByInfo(TEXT("Base_Color"), FLinearColor::Red);
+		break;
+    	
+	case ETeam::Black:
+		DynamicColorMaterial->SetVectorParameterValueByInfo(TEXT("Base_Color"), FLinearColor::Black);
+		break;
+	}
 }
 
 void APlayerCharacter::OnRep_CurrentWeapon()

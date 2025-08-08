@@ -83,6 +83,9 @@ protected:
 private:
 	float Health;
 
+	UPROPERTY()
+	UMaterialInstanceDynamic* DynamicColorMaterial;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -110,6 +113,8 @@ public:
 	// Added for Shotting/Alternative Primary Fire Actions
 	void Start_PrimaryFire();
 	void Stop_PrimaryFire();
+
+	void UpdatePlayerColor();
 
 protected:
 
